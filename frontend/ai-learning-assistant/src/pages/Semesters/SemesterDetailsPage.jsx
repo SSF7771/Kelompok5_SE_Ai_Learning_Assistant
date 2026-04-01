@@ -322,8 +322,16 @@ const SemesterDetailsPage = () => {
                     <Link
                       to={`/semesters/${semester.semesterNumber}/${course._id}/choice`}
                     >
-                      <Button>
-                        Learn More
+                      <Button
+                        type='button'
+                        variant='primary'
+                        size="sm"
+                        classname="group transition-all duration-300"
+                      >
+                        <h3 className="text-xs text-white">
+                          Learn More
+                        </h3>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
                   </h3>
