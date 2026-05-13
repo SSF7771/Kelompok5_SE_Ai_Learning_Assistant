@@ -1,6 +1,23 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+
+// jwt -> Digunakan sebagai "tiket masuk" digital agar server tahu siapa yang sedang mengakses aplikasi 
+// tanpa harus meminta password berulang kali di setiap halaman.
+// protect -> Lapisan keamanan (middleware) yang memeriksa apakah token JWT yang dibawa user valid 
+// atau tidak sebelum mengizinkan akses ke fungsi profil.
+// register -> Berfungsi untuk mendaftarkan user baru ke dalam aplikasi dengan menyimpan data identitas (seperti nama, email, dan password) 
+// ke dalam model User.
+// login -> Memvalidasi kredensial user (email dan password). 
+// Jika data cocok, fungsi ini akan menghasilkan token menggunakan jwt (JSON Web Token) sebagai identitas digital 
+// untuk mengakses fitur yang terkunci.
+// getProfile -> Mengambil data detail milik user yang sedang aktif dari model User. 
+// Fungsi ini menggunakan middleware protect untuk memastikan hanya user yang sudah login (memiliki token valid) yang bisa melihat data tersebut.
+// updateProfile -> Memungkinkan user untuk mengubah informasi pribadi mereka di dalam database, 
+// untuk memastikan data di dalam model User tetap akurat dan terbaru.
+// changePassword -> Fitur keamanan khusus untuk mengganti kata sandi lama dengan kata sandi baru. 
+// Fungsi ini memproses pembaruan data pada model User secara aman (biasanya melibatkan proses hashing ulang).
+
 // Generate JWT Token
 export const generateToken = (id) => {
   return jwt.sign(

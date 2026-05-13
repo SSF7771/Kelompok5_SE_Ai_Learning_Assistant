@@ -6,6 +6,19 @@ import { chunkText } from "../utils/textChunker.js";
 import fs from "fs/promises";
 import mongoose from "mongoose";
 
+// pdfParser & textChunker -> Alat bantu untuk mengubah file mentah (PDF) menjadi format data teks 
+// yang siap diolah oleh mesin pencari atau sistem AI.
+// fs / promises -> Digunakan untuk berinteraksi dengan sistem penyimpanan file server 
+// (seperti menghapus file saat dokumen dihapus dari aplikasi).
+// uploadDocument -> Mengelola proses unggah file PDF. Fungsi ini mengekstraksi teks menggunakan extractTextFromPDF, 
+// membagi teks menjadi potongan kecil dengan chunkText agar mudah diproses AI, lalu menyimpan informasi tersebut ke dalam model Document.
+// getDocuments -> Berfungsi untuk mengambil seluruh daftar dokumen yang telah diunggah oleh user dari database 
+// untuk ditampilkan pada halaman listing document.
+// getSingleDocument -> Mengambil data detail dari satu dokumen spesifik berdasarkan ID-nya. 
+// Fungsi ini digunakan untuk menampilkan isi dokumen atau metadata lengkap di halaman document details.
+// deleteDocument -> Menghapus data dokumen dari database secara permanen. 
+// Fungsi ini juga bertugas menghapus file fisik di penyimpanan server (menggunakan fs) serta membersihkan data terkait seperti Flashcard dan Quiz yang terhubung dengan dokumen tersebut.
+
 
 //@desc -> Upload PDF document
 //@route -> POST /api/document/upload

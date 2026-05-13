@@ -3,6 +3,10 @@ import Quiz from "../models/Quiz.js";
 import FlashCard from "../models/Flashcard.js";
 import Semester from "../models/Semester.js";
 
+// getDashboard -> Fungsi utama yang bertugas mengumpulkan dan menyajikan seluruh data ringkasan aktivitas user 
+// untuk ditampilkan pada halaman beranda (overview), seperti jumlah total (countDocuments) dari model Document, FlashCard, dan Quiz milik user,
+// mengambil daftar kuis yang selesai dari model Quiz untuk dihitung rata-rata skor atau progresnya, recent activity. 
+
 export const getDashboard = async (req, res, next) => {
     try {
         const userId = req.user._id;
@@ -49,11 +53,6 @@ export const getDashboard = async (req, res, next) => {
         .limit(5)
         .select("title fileName lastAccessed status");
 
-        // ADD THIS FOR HISTORY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // const recentCourses = await Semester?.courses.sort({ lastAccessed: -1 })
-        // .limit(5)
-        // .select("title fileName lastAccessed");
-
         const recentQuizzes = await Quiz.find({ userId })
         .sort({ createdAt: -1 })
         .limit(5)
@@ -79,7 +78,6 @@ export const getDashboard = async (req, res, next) => {
                 recentActivity: {
                     documents: recentDocuments,
                     quizzes: recentQuizzes
-                    // courses: recentCourses
                 }
             }
         });

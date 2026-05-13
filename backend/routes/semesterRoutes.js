@@ -33,7 +33,7 @@ router.post("/:semesterId/courses", addCourse);
 router.delete("/:semesterId/courses/:courseId", deleteCourse);
 
 // Upload multiple PDFs
-// 'pdfs' is the field name for your frontend FormData
+// 'pdfs' is the field name for the frontend FormData
 router.post("/:semesterId/courses/:courseId/pdfs", upload.array("pdfs", 5), uploadPdfs);
 
 // Delete a PDF
@@ -42,7 +42,7 @@ router.delete("/:semesterId/courses/:courseId/pdfs/:pdfId", deletePdf);
 // Upload a single merged file for learning
 router.post("/:semesterId/courses/:courseId/addForLearning", upload.single('file'), uploadCoursePdf);
 
-// Get the sing
+// Get the single merged file for learning
 router.get("/:semesterId/courses/:courseId/getForLearning", getSemesterFile);
 
 export default router;

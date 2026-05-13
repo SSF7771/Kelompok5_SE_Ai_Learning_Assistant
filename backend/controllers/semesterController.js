@@ -5,6 +5,20 @@ import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { chunkText } from "../utils/textChunker.js";
 import fs from "fs/promises";
 
+// createSemester -> Membuat entitas semester baru (misalnya Semester 1, 2, dst.) 
+// ke dalam model Semester sebagai wadah utama organisasi mata kuliah.
+// getAllSemesters -> Mengambil seluruh daftar semester yang tersedia untuk ditampilkan pada menu navigasi utama aplikasi.
+// getSemesterByNumber -> Mencari dan menampilkan detail satu semester tertentu berdasarkan urutan angkanya.
+// getCourseById -> Mengambil data lengkap sebuah mata kuliah (Course) yang spesifik untuk melihat konten di dalamnya.
+// addCourse -> Menambahkan mata kuliah baru ke dalam suatu semester tertentu, sehingga mempermudah pengelompokan materi berdasarkan kurikulum.
+// deleteCourse -> Menghapus mata kuliah beserta seluruh data terkait dari database semester.
+// uploadPdfs -> Mengelola unggahan banyak file PDF sekaligus (maksimal 5) ke dalam suatu mata kuliah; biasanya digunakan untuk mengisi konten pada fitur Bank Soal (Question Bank).
+// deletePdf -> Menghapus satu file PDF spesifik dari daftar dokumen mata kuliah dan membersihkan file fisiknya melalui fs.
+// uploadCoursePdf -> Mengunggah satu file PDF khusus yang akan digunakan sebagai materi utama pada fitur Learning Portal, 
+// termasuk melakukan ekstraksi teks dan chunking untuk keperluan AI.
+// getSemesterFile -> Mengambil data materi pembelajaran yang sudah diunggah di Portal Belajar agar dapat diakses kembali oleh user 
+// untuk dipelajari.
+
 // @desc    Create a new Semester
 // @route   POST /api/semesters
 export const createSemester = async (req, res, next) => {
