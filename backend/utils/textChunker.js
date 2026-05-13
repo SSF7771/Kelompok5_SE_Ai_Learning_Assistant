@@ -207,15 +207,18 @@ export const findRelevantChunks = (chunks, query, maxChunks = 3) => {
     };
   });
 
-  return scoredChunks
+  const candidatePoolSize = maxChunks * 3;
+
+  const topScoredChunks = scoredChunks
     .filter((chunk) => chunk.score > 0)
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
-
-      if (b.matchedWords !== a.matchedWords)
-        return b.matchedWords - a.matchedWords;
-
-      return a.chunkIndex - b.chunkIndex;
+      return b.matchedWords - a.matchedWords;
     })
+    .slice(0, candidatePoolSize); // Take a pool of candidates
+
+  // Randomly shuffle the pool and then take the maxChunks
+  return topScoredChunks
+    .sort(() => Math.random() - 0.5) // Simple shuffle
     .slice(0, maxChunks);
 };
