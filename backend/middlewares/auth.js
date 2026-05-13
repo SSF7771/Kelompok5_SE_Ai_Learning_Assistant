@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+// protect -> Bertindak sebagai "security" yang mengizinkan permintaan berlanjut ke fungsi controller berikutnya jika token valid, 
+// atau memblokirnya (401 Unauthorized) jika token salah atau tidak ada. 
+// Jika ada, data pengguna yang berhasil diverifikasi akan disimpan ke dalam objek req.user
+
 const protect = async (req, res, next) => {
   let token;
 

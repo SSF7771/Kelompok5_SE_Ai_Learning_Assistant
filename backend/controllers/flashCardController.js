@@ -1,5 +1,16 @@
 import FlashCard from "../models/Flashcard.js";
 
+// getAllFlashCardSets -> Mengambil seluruh daftar koleksi set flashcard yang dimiliki oleh user dari database 
+// untuk ditampilkan pada halaman utama koleksi atau dashboard.
+// getFlashCard -> Berfungsi untuk mengambil satu set flashcard spesifik yang terkait dengan sebuah dokumen tertentu berdasarkan documentId. 
+// Digunakan saat user ingin mulai belajar menghafal dari materi PDF tersebut.
+// reviewFlashCard -> Mencatat progres belajar user pada sebuah kartu spesifik (misalnya menandai apakah user sudah paham atau belum). 
+// Fungsi ini membantu sistem melacak sejauh mana materi telah dikuasai.
+// toggleStarFlashCard -> Memungkinkan user untuk menandai satu kartu flashcard tertentu sebagai "Penting" atau "Favorit" (fitur bintang). 
+// Ini memudahkan user untuk menyaring kartu-kartu yang dianggap sulit.
+// deleteFlashCardSet -> Menghapus satu set koleksi flashcard secara keseluruhan dari database. 
+// Digunakan jika user ingin membersihkan data atau memulai ulang proses pembuatan flashcard dari dokumen tersebut.
+
 // Get All Flashcards for a document
 export const getFlashCard = async (req, res, next) => {
   try {

@@ -5,6 +5,20 @@ import * as geminiService from "../utils/geminiService.js";
 import { findRelevantChunks } from "../utils/textChunker.js";
 import ChatHistory from "../models/ChatHistory.js";
 
+// generateFlashCards -> Berfungsi untuk mengekstraksi poin-poin penting dari dokumen menggunakan Gemini AI 
+// dan mengubahnya menjadi pasangan tanya-jawab. Hasilnya disimpan ke dalam model FlashCard sebagai alat bantu hafalan (active recall).
+// generateQuiz -> Menggunakan AI untuk menyusun soal pilihan ganda berdasarkan isi dokumen. 
+// Soal-soal ini disimpan dalam model Quiz untuk menguji pemahaman user terhadap materi tersebut.
+// generateSummary -> Membuat ringkasan singkat dan padat dari keseluruhan teks dokumen.
+// Ringkasan ini biasanya digunakan untuk memperbarui atribut summary pada model Document agar user cepat memahami inti materi.
+// chat -> Mengelola interaksi tanya jawab antara user dan AI. 
+// Fungsi ini menggunakan findRelevantChunks untuk mencari konteks yang sesuai dalam dokumen, 
+// lalu menyimpan percakapannya ke dalam model ChatHistory.
+// explainConcept -> Fitur khusus untuk menjelaskan istilah atau bagian yang sulit dari dokumen dengan bahasa yang lebih sederhana 
+// melalui bantuan AI, guna memperdalam pemahaman konsep tertentu secara spesifik.
+// getChatHistory -> Berfungsi untuk mengambil history percakapan yang tersimpan di model ChatHistory berdasarkan ID dokumen tertentu, 
+// sehingga user dapat melihat kembali diskusi sebelumnya dengan AI.
+
 //Generate Flashcards from document
 export const generateFlashCards = async (req, res, next) => {
     try {
