@@ -29,7 +29,7 @@ connectDB();
 
 const allowedOrigins = [
   'http://localhost:5173', // Local FE
-  'https://your-frontend-project.vercel.app' // Deployed Vercel frontend
+  'https://ai-learning-assistant-fe-nine.vercel.app' // Deployed Vercel frontend
 ];
 
 //MIDDLEWARE TO HANDLE CORS
@@ -65,6 +65,13 @@ app.use("/api/semesters", semesterRoutes);
 
 
 app.use(errorHandler);
+
+app.get("/", (req, res) => {
+    res.json({ 
+        success: true, 
+        message: "Backend API is running..." 
+    });
+});
 
 //404 Handler
 app.use((req, res) => {
