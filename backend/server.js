@@ -1,4 +1,4 @@
-import { DOMMatrix } from 'dommatrix';
+import DOMMatrix from 'dommatrix';
 global.DOMMatrix = DOMMatrix;
 
 global.ImageData = class {};
