@@ -1,5 +1,10 @@
-import DOMMatrix from 'dommatrix';
+import { DOMMatrix } from 'dommatrix';
 global.DOMMatrix = DOMMatrix;
+
+global.ImageData = class {};
+global.Path2D = class {};
+global.Canvas = class {};
+global.HTMLElement = class {};
 
 import dotenv from "dotenv";
 import express from "express";
