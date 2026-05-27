@@ -337,6 +337,16 @@ export const uploadCoursePdf = async (req, res, next) => {
       });
     }
 
+    // Check size BEFORE processing to give a better error message
+    // 4.5MB = 4718592 bytes.
+    if (req.file.size > 4000000) { 
+        return res.status(413).json({
+            success: false,
+            error: "File too large for Vercel Free (Limit: 4MB)",
+            statusCode: 413
+        });
+    }
+
     const { semesterId, courseId } = req.params;
     const { title } = req.body;
 
@@ -346,7 +356,6 @@ export const uploadCoursePdf = async (req, res, next) => {
     });
 
     if (!semester) {
-      await fs.unlink(req.file.path); // Clean up file
       return res.status(404).json({
         success: false,
         error: "Semester or Course not found",
