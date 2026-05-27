@@ -4,6 +4,7 @@ import path from "path";
 import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { chunkText } from "../utils/textChunker.js";
 import fs from "fs/promises";
+import cloudinary from "../config/cloudinary.js";
 
 // createSemester -> Membuat entitas semester baru (misalnya Semester 1, 2, dst.) 
 // ke dalam model Semester sebagai wadah utama organisasi mata kuliah.
@@ -167,13 +168,26 @@ export const uploadPdfs = async (req, res, next) => {
         statusCode: 400,
       });
 
-    const baseUrl = `http://localhost:${process.env.PORT || 5000}`;
+    // WITH CLOUDINARY
+    // Upload all files to Cloudinary in parallel
+    const uploadPromises = req.files.map(async (file) => {
+      // Convert buffer to Base64
+      const fileBase64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+      
+      // Upload to Cloudinary
+      const result = await cloudinary.uploader.upload(fileBase64, {
+        folder: "ai_learning_assistant/pdfs",
+        resource_type: "auto",
+      });
 
-    // 'file' -> represents the individual file currently being processed in the loop
-    const newPdfs = req.files.map((file) => ({
-      fileName: file.originalname,
-      fileUrl: `${baseUrl}/uploads/semesters/${file.filename}`,
-    }));
+      return {
+        fileName: file.originalname,
+        fileUrl: result.secure_url, // This is the permanent Cloudinary link
+        cloudinaryId: result.public_id // Good practice to store this for later deletion
+      };
+    });
+
+    const newPdfs = await Promise.all(uploadPromises)
 
     const updatedSemester = await Semester.findOneAndUpdate(
       {
@@ -342,8 +356,21 @@ export const uploadCoursePdf = async (req, res, next) => {
     const folder = "semesters";
 
     // Construct the URL for the uploaded file
-    const baseUrl = `http://localhost:${process.env.PORT || 5000}`;
-    const fileUrl = `${baseUrl}/uploads/${folder}/${req.file.filename}`;
+    // LOCALLY (FOR LOCAL)
+    // const baseUrl = `http://localhost:${process.env.PORT || 5000}`;
+    // const fileUrl = `${baseUrl}/uploads/${folder}/${req.file.filename}`;
+
+    // WITH CLOUDINARY
+    const fileBase64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(fileBase64, {
+      folder: "ai_learning_assistant", // Optional: organizes files in folders
+      resource_type: "auto", // Automatically detect if it's a PDF, Image, ect.
+    });
+
+    // Get the URL
+    const fileUrl = result.secure_url;
 
     // Create the Document
     const newDoc = await Document.create({

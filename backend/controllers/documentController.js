@@ -5,6 +5,7 @@ import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { chunkText } from "../utils/textChunker.js";
 import fs from "fs/promises";
 import mongoose from "mongoose";
+import cloudinary from "../config/cloudinary.js";
 
 // pdfParser & textChunker -> Alat bantu untuk mengubah file mentah (PDF) menjadi format data teks 
 // yang siap diolah oleh mesin pencari atau sistem AI.
@@ -46,8 +47,16 @@ export const uploadDocument = async (req, res, next) => {
         }
 
         // Construct the URL for the uploaded file
-        const baseUrl = `http://localhost:${process.env.PORT || 5000}`;
-        const fileUrl = `${baseUrl}/uploads/documents/${req.file.filename}`;
+        // Convert the buffer from memory to a Base64 string
+        const fileBase64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+
+        // Upload to Cloudinary
+        const uploadResponse = await cloudinary.uploader.upload(fileBase64, {
+            folder: "ai_learning_assistant/documents",
+            resource_type: "auto",
+        });
+
+        const fileUrl = uploadResponse.secure_url;
         
         // Create a document record
         const document = await Document.create({
