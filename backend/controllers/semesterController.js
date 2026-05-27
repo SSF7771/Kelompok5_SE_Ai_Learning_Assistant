@@ -398,11 +398,8 @@ export const uploadCoursePdf = async (req, res, next) => {
       { $set: { "courses.$.pdfLearn": newDoc._id } },
     );
 
-    processPdf(newDoc._id, req.file.path).catch(async (err) => {
-      console.error("PDF processing error: ", err);
-      // Update status to failed so the UI can show an error
-      await Document.findByIdAndUpdate(newDoc._id, { status: "failed" });
-    });
+    // This keeps the Vercel function alive until the PDF is parsed
+    await processPdf(newDoc._id, fileUrl); 
 
     res.status(201).json({
       success: true,
