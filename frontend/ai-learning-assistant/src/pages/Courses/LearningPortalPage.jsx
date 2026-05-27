@@ -43,10 +43,10 @@ const LearningPortalPage = () => {
 
     const filePath = document.data.filePath;
 
-    if (filePath.startsWith("http://") || filePath.startsWith("https://"))
+    if (filePath.startsWith("http")) return filePath;
       return filePath;
 
-    const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
     return `${baseUrl}${filePath.startsWith("/") ? "" : "/"}${filePath}`;
   };
 
