@@ -417,9 +417,9 @@ export const uploadCoursePdf = async (req, res, next) => {
 };
 
 // Helper FUNCTION for process PDF
-const processPdf = async (documentId, filePath) => {
+const processPdf = async (documentId, fileUrl) => {
   try {
-    const { text } = await extractTextFromPDF(filePath);
+    const { text } = await extractTextFromPDF(fileUrl);
 
     // Create chunks
     const chunks = chunkText(text, 500, 50);
@@ -457,7 +457,7 @@ export const getSemesterFile = async (req, res, next) => {
     if (!semester) 
       return res.status(404).json({ success: false, message: "Not found" });
 
-    res.status(201).json({ 
+    res.status(200).json({ 
       success: true, 
       data: semester 
     });
