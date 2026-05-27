@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import axios from "axios";
 import pdf from "pdf-parse-fork";
 
 /**  Extract text from PDF File
@@ -8,15 +8,21 @@ import pdf from "pdf-parse-fork";
 
 export const extractTextFromPDF = async (filePath) => {
     try {
-        const dataBuffer = await fs.readFile(filePath);
+        // Fetch the PDF from Cloudinary as an arraybuffer
+        const response = await axios.get(fileUrl, { 
+            responseType: 'arraybuffer' 
+        });
+
+        // Convert the response data to a Node.js Buffer
+        const dataBuffer = Buffer.from(response.data);
         
-        //pdf-parse expects a Uint8Array, not a Buffer
-        const parser = new pdf(new Uint8Array(dataBuffer));
-        const data = await parser.getText();
+        // Extract text using the fork (it's a function, not a constructor)
+        // Standard pdf-parse-fork syntax: pdf(buffer, options)
+        const data = await pdf(dataBuffer);
 
         return {
             text: data.text,
-            numPages: data.numPages,
+            numPages: data.numpages, // It is .numpages (all lowercase) in this library
             info: data.info,
         };
 
