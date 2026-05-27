@@ -1,3 +1,6 @@
+import DOMMatrix from 'dommatrix';
+global.DOMMatrix = DOMMatrix;
+
 import dotenv from "dotenv";
 import express from "express";
 
