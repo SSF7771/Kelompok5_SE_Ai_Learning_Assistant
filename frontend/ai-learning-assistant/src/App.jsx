@@ -1,16 +1,16 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import LoginPage from "./pages/Auth/LoginPageTEMP"
-import RegisterPage from './pages/Auth/RegisterPageTEMP'; //
-import NotFoundPage from './pages/NotFoundPageTEMP'; //
+import LoginPage from "./pages/Auth/LoginPage"
+import RegisterPage from './pages/Auth/RegisterPage'; //
+import NotFoundPage from './pages/NotFoundPage'; //
 import DashboardPage from './pages/Dashboard/DashboardPage';
-import DocumentListPage from './pages/Documents/DocumentListPageTEMP'; //
-import DocumentDetailPage from './pages/Documents/DocumentDetailPageTEMP'; //
-import FlashCardsListPage from './pages/Flashcards/FlashCardsListPageTEMP'; //
-import FlashCardPage from './pages/Flashcards/FlashCardPageTEMP'; //
-import QuizTakePage from './pages/Quizzes/QuizTakePageTEMP'; //
-import QuizResultPage from './pages/Quizzes/QuizResultPageTEMP'; //
-import ProfilePage from './pages/Profile/ProfilePageTEMP'; //
+import DocumentListPage from './pages/Documents/DocumentListPage'; //
+import DocumentDetailPage from './pages/Documents/DocumentDetailPage'; //
+import FlashCardsListPage from './pages/Flashcards/FlashCardsListPage'; //
+import FlashCardPage from './pages/Flashcards/FlashCardPage'; //
+import QuizTakePage from './pages/Quizzes/QuizTakePage'; //
+import QuizResultPage from './pages/Quizzes/QuizResultPage'; //
+import ProfilePage from './pages/Profile/ProfilePage'; //
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
 import BankQuestionsPage from './pages/BankQuestions/BankQuestionsPage';
