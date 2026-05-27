@@ -6,7 +6,7 @@ import pdf from "pdf-parse-fork";
 * @returns { Promise<{text: string, numPages: number}> } filePath - Path to PDF File
 */
 
-export const extractTextFromPDF = async (filePath) => {
+export const extractTextFromPDF = async (fileUrl) => {
     try {
         // Fetch the PDF from Cloudinary as an arraybuffer
         const response = await axios.get(fileUrl, { 
