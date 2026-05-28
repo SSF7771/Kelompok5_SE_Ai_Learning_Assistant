@@ -5,7 +5,7 @@ import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { chunkText } from "../utils/textChunker.js";
 import cloudinary from "../config/cloudinary.js";
 
-// createSemester -> Membuat entitas semester baru (misalnya Semester 1, 2, dst.) 
+// createSemester -> Membuat entitas semester baru (misalnya Semester 1, 2, dst.)
 // ke dalam model Semester sebagai wadah utama organisasi mata kuliah.
 // getAllSemesters -> Mengambil seluruh daftar semester yang tersedia untuk ditampilkan pada menu navigasi utama aplikasi.
 // getSemesterByNumber -> Mencari dan menampilkan detail satu semester tertentu berdasarkan urutan angkanya.
@@ -14,9 +14,9 @@ import cloudinary from "../config/cloudinary.js";
 // deleteCourse -> Menghapus mata kuliah beserta seluruh data terkait dari database semester.
 // uploadPdfs -> Mengelola unggahan banyak file PDF sekaligus (maksimal 5) ke dalam suatu mata kuliah; biasanya digunakan untuk mengisi konten pada fitur Bank Soal (Question Bank).
 // deletePdf -> Menghapus satu file PDF spesifik dari daftar dokumen mata kuliah dan membersihkan file fisiknya melalui fs.
-// uploadCoursePdf -> Mengunggah satu file PDF khusus yang akan digunakan sebagai materi utama pada fitur Learning Portal, 
+// uploadCoursePdf -> Mengunggah satu file PDF khusus yang akan digunakan sebagai materi utama pada fitur Learning Portal,
 // termasuk melakukan ekstraksi teks dan chunking untuk keperluan AI.
-// getSemesterFile -> Mengambil data materi pembelajaran yang sudah diunggah di Portal Belajar agar dapat diakses kembali oleh user 
+// getSemesterFile -> Mengambil data materi pembelajaran yang sudah diunggah di Portal Belajar agar dapat diakses kembali oleh user
 // untuk dipelajari.
 
 // @desc    Create a new Semester
@@ -172,7 +172,7 @@ export const uploadPdfs = async (req, res, next) => {
     const uploadPromises = req.files.map(async (file) => {
       // Convert buffer to Base64
       const fileBase64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
-      
+
       // Upload to Cloudinary
       const result = await cloudinary.uploader.upload(fileBase64, {
         folder: "ai_learning_assistant/pdfs",
@@ -182,11 +182,11 @@ export const uploadPdfs = async (req, res, next) => {
       return {
         fileName: file.originalname,
         fileUrl: result.secure_url, // This is the permanent Cloudinary link
-        cloudinaryId: result.public_id // Good practice to store this for later deletion
+        cloudinaryId: result.public_id, // Good practice to store this for later deletion
       };
     });
 
-    const newPdfs = await Promise.all(uploadPromises)
+    const newPdfs = await Promise.all(uploadPromises);
 
     const updatedSemester = await Semester.findOneAndUpdate(
       {
@@ -215,7 +215,7 @@ export const uploadPdfs = async (req, res, next) => {
       data: updatedSemester,
     });
   } catch (error) {
-      next(error);
+    next(error);
   }
 };
 
@@ -329,12 +329,12 @@ export const uploadCoursePdf = async (req, res, next) => {
 
     // Check size BEFORE processing to give a better error message
     // 4.5MB = 4718592 bytes.
-    if (req.file.size > 4000000) { 
-        return res.status(413).json({
-            success: false,
-            error: "File too large for Vercel Free (Limit: 4MB)",
-            statusCode: 413
-        });
+    if (req.file.size > 4000000) {
+      return res.status(413).json({
+        success: false,
+        error: "File too large for Vercel Free (Limit: 4MB)",
+        statusCode: 413,
+      });
     }
 
     const { semesterId, courseId } = req.params;
@@ -390,7 +390,11 @@ export const uploadCoursePdf = async (req, res, next) => {
     );
 
     // This keeps the Vercel function alive until the PDF is parsed
-    await processPdf(newDoc._id, fileUrl); 
+    try {
+      await processPdf(newDoc._id, req.file.buffer);
+    } catch (err) {
+      console.error("Processing failed:", err);
+    }
 
     res.status(201).json({
       success: true,
@@ -403,9 +407,9 @@ export const uploadCoursePdf = async (req, res, next) => {
 };
 
 // Helper FUNCTION for process PDF
-const processPdf = async (documentId, fileUrl) => {
+const processPdf = async (documentId, fileBuffer) => {
   try {
-    const { text } = await extractTextFromPDF(fileUrl);
+    const { text } = await extractTextFromPDF(fileBuffer);
 
     // Create chunks
     const chunks = chunkText(text, 500, 50);
@@ -436,18 +440,17 @@ export const getSemesterFile = async (req, res, next) => {
     const semester = await Semester.findOne({
       semesterNumber: semesterId,
     }).populate({
-      path: "courses.pdfLearn",   // This converts the ID into the actual Document object
-      model: 'Document'
-    }); 
-
-    if (!semester) 
-      return res.status(404).json({ success: false, message: "Not found" });
-
-    res.status(200).json({ 
-      success: true, 
-      data: semester 
+      path: "courses.pdfLearn", // This converts the ID into the actual Document object
+      model: "Document",
     });
 
+    if (!semester)
+      return res.status(404).json({ success: false, message: "Not found" });
+
+    res.status(200).json({
+      success: true,
+      data: semester,
+    });
   } catch (error) {
     next(error);
   }
