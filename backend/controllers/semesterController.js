@@ -354,6 +354,10 @@ export const uploadCoursePdf = async (req, res, next) => {
 
     const folder = "semesters";
 
+    // Identify the specific course object to check for existing PDF
+    const course = semester.courses.id(courseId);
+    const existingDocId = course.pdfLearn;
+
     // Construct the URL for the uploaded file
     // LOCALLY (FOR LOCAL)
     // const baseUrl = `http://localhost:${process.env.PORT || 5000}`;
@@ -371,31 +375,51 @@ export const uploadCoursePdf = async (req, res, next) => {
     // Get the URL
     const fileUrl = result.secure_url;
 
-    // Create the Document
-    const newDoc = await Document.create({
-      userId: "698bea24e8e6702c5adca64f", //dummy -> Admin Uploaded it
-      courseId: courseId,
-      title,
-      fileName: req.file.originalname,
-      filePath: fileUrl, // store the URL instead of the local path
-      fileSize: req.file.size,
-      status: "processing",
-      docType: "public",
-    });
+    let targetDoc;
+
+    // Update existing OR Create new
+    if (existingDocId) {
+      // Update the existing document record
+      targetDoc = await Document.findByIdAndUpdate(
+        existingDocId,
+        {
+          title,
+          fileName: req.file.originalname,
+          filePath: fileUrl,
+          fileSize: req.file.size,
+          status: "processing", // Reset status for AI to re-process
+        },
+        { new: true }
+      );
+    } 
+
+    // Create the Document if it doesn't exist yet
+    if (!targetDoc) {
+    targetDoc = await Document.create({
+        userId: "698bea24e8e6702c5adca64f", //dummy -> Admin Uploaded it
+        courseId: courseId,
+        title,
+        fileName: req.file.originalname,
+        filePath: fileUrl, // store the URL instead of the local path
+        fileSize: req.file.size,
+        status: "processing",
+        docType: "public",
+      });
+    }
 
     // Link it to the Semester
     const updateResult = await Semester.updateOne(
       { semesterNumber: semesterId, "courses._id": courseId },
-      { $set: { "courses.$.pdfLearn": newDoc._id } },
+      { $set: { "courses.$.pdfLearn": targetDoc._id } },
     );
 
     // This keeps the Vercel function alive until the PDF is parsed
-    await processPdf(newDoc._id, fileUrl); 
+    await processPdf(targetDoc._id, fileUrl); 
 
     res.status(201).json({
       success: true,
-      data: newDoc,
-      message: "Document uploaded successfully. Processing in progress...",
+      data: targetDoc,
+      message: existingDocId ? "Document updated successfully..." : "Document created successfully. Processing in progress..",
     });
   } catch (error) {
     next(error);
