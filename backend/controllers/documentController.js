@@ -69,7 +69,11 @@ export const uploadDocument = async (req, res, next) => {
         });
 
         // This keeps the Vercel function alive until the PDF is parsed
-        await processPdf(document._id, fileUrl);
+        try {
+            await processPdf(document._id, req.file.buffer); 
+        } catch (err) {
+            console.error("Processing failed:", err);
+        }
 
         res.status(201).json({
             success: true,
@@ -78,17 +82,14 @@ export const uploadDocument = async (req, res, next) => {
         });
 
     } catch (error) {
-        if(req.file)
-            await fs.unlink(req.file.path).catch(() => {});
-
         next(error);
     }
 };
 
 // Helper FUNCTION for process PDF
-const processPdf = async (documentId, fileUrl) => {
+const processPdf = async (documentId, fileBuffer) => {
     try {
-        const { text } = await extractTextFromPDF(fileUrl);
+        const { text } = await extractTextFromPDF(fileBuffer);
 
         // Create chunks
         const chunks = chunkText(text, 500, 50);

@@ -6,24 +6,13 @@ import pdf from "pdf-parse-fork";
 * @returns { Promise<{text: string, numPages: number}> } filePath - Path to PDF File
 */
 
-export const extractTextFromPDF = async (fileUrl) => {
+export const extractTextFromPDF = async (fileBuffer) => {
     try {
-        // Fetch the PDF from Cloudinary as an arraybuffer
-        const response = await axios.get(fileUrl, { 
-            responseType: 'arraybuffer' 
-        });
-
-        // Convert the response data to a Node.js Buffer
-        const dataBuffer = Buffer.from(response.data);
-        
-        // Extract text using the fork (it's a function, not a constructor)
-        // Standard pdf-parse-fork syntax: pdf(buffer, options)
-        const data = await pdf(dataBuffer);
+        const data = await pdf(fileBuffer); 
 
         return {
             text: data.text,
-            numPages: data.numpages, // It is .numpages (all lowercase) in this library
-            info: data.info,
+            numPages: data.numpages, // Ensure lowercase 'p' for pdf-parse-fork
         };
 
     } catch (error) {
