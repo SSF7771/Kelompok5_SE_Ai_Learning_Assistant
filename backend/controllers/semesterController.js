@@ -390,6 +390,7 @@ export const uploadCoursePdf = async (req, res, next) => {
       filePath: fileUrl, // store the URL instead of the local path
       fileSize: req.file.size,
       status: "processing",
+      docType: "public",
     });
 
     // Link it to the Semester

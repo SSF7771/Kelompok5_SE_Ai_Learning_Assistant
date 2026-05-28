@@ -65,7 +65,8 @@ export const uploadDocument = async (req, res, next) => {
             fileName: req.file.originalname,
             filePath: fileUrl,  // store the URL instead of the local path
             fileSize: req.file.size,
-            status: "processing"
+            status: "processing",
+            docType: "private"
         });
 
         processPdf(document._id, req.file.path).catch(err => {
@@ -119,7 +120,8 @@ export const getDocuments = async (req, res, next) => {
         const documents = await Document.aggregate([
             {
                 $match: {
-                    userId: new mongoose.Types.ObjectId(req.user._id)
+                    userId: new mongoose.Types.ObjectId(req.user._id),
+                    docType: "private"
                 },
             },
             {

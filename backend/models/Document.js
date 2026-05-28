@@ -53,6 +53,11 @@ const documentSchema = new mongoose.Schema({
         type: String,
         enum: ["processing", "ready", "failed"],
         default: "processing"
+    },
+    docType: {
+        type: String,
+        enum: ["private", "public"],
+        default: "private"
     }
 }, {
     timestamps: true
