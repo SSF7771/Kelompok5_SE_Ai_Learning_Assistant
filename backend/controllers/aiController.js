@@ -35,7 +35,11 @@ export const generateFlashCards = async (req, res, next) => {
         const document = await Document.findOne({
             _id: documentId,
             // userId: req.user._id,
-            status: "ready"
+            status: "ready",
+            $or: [
+                { userId: req.user._id }, // User owns it
+                { docType: "public" }      // It's a public learning material
+            ]
         });
 
         if(!document) {
@@ -92,7 +96,11 @@ export const generateQuiz = async (req, res, next) => {
         const document = await Document.findOne({
             _id: documentId,
             // userId: req.user._id,
-            status: "ready"
+            status: "ready",
+            $or: [
+                { userId: req.user._id }, // User owns it
+                { docType: "public" }      // It's a public learning material
+            ]
         });
 
         if(!document) {
@@ -147,7 +155,11 @@ export const generateSummary = async (req, res, next) => {
         const document = await Document.findOne({
             _id: documentId,
             // userId: req.user._id,
-            status: "ready"
+            status: "ready",
+            $or: [
+                { userId: req.user._id }, // User owns it
+                { docType: "public" }      // It's a public learning material
+            ]
         });
 
         if(!document) {
@@ -192,7 +204,11 @@ export const chat = async (req, res, next) => {
         const document = await Document.findOne({
             _id: documentId,
             // userId: req.user._id,
-            status: "ready"
+            status: "ready",
+            $or: [
+                { userId: req.user._id }, // User owns it
+                { docType: "public" }      // It's a public learning material
+            ]
         });
 
         if(!document) {
@@ -274,7 +290,11 @@ export const explainConcept = async (req, res, next) => {
         const document = await Document.findOne({
             _id: documentId,
             // userId: req.user._id,
-            status: "ready"
+            status: "ready",
+            $or: [
+                { userId: req.user._id }, // User owns it
+                { docType: "public" }      // It's a public learning material
+            ]
         });
 
         if(!document) {
