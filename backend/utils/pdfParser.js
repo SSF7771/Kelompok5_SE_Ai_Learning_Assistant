@@ -12,7 +12,8 @@ export const extractTextFromPDF = async (fileBuffer) => {
 
         return {
             text: data.text,
-            numPages: data.numpages, // Ensure lowercase 'p' for pdf-parse-fork
+            numPages: data.numpages, // It is .numpages (all lowercase) in this library
+            info: data.info,
         };
 
     } catch (error) {
