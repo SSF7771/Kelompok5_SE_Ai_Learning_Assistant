@@ -253,13 +253,19 @@ export const deletePdf = async (req, res, next) => {
       });
     }
 
-    // Delete the file from the filesystem
-    const filePath = path.join(process.cwd(), pdf.fileUrl);
-
     try {
-      await fs.unlink(filePath);
+      // Extract the public_id from the Cloudinary URL
+      const urlParts = pdf.fileUrl.split("/");
+      const fileNameWithExtension = urlParts.pop(); // filename.pdf
+      const folder = urlParts.slice(urlParts.indexOf("upload") + 2).join("/"); // folder
+      const publicId = `${folder}/${fileNameWithExtension.split(".")[0]}`; // folder/filename
+
+      // Delete from Cloudinary
+      // resource_type should be "image" for PDFs uploaded via "auto" or "image"
+      await cloudinary.uploader.destroy(publicId);
+      
     } catch (err) {
-      console.error("File deletion failed:", err.message);
+      console.error("Cloudinary deletion failed:", err.message);
     }
 
     // Remove the PDF from the array using $pull
