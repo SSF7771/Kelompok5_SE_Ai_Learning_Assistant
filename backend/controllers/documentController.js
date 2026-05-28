@@ -88,9 +88,9 @@ export const uploadDocument = async (req, res, next) => {
 };
 
 // Helper FUNCTION for process PDF
-const processPdf = async (documentId, filePath) => {
+const processPdf = async (documentId, fileUrl) => {
     try {
-        const { text } = await extractTextFromPDF(filePath);
+        const { text } = await extractTextFromPDF(fileUrl);
 
         // Create chunks
         const chunks = chunkText(text, 500, 50);
