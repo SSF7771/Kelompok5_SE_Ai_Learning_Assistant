@@ -37,7 +37,7 @@ export const generateFlashCards = async (req, res, next) => {
             // userId: req.user._id,
             status: "ready",
             $or: [
-                { docType: "private" }, // User owns it
+                { userId: req.user._id }, // User owns it
                 { docType: "public" }      // It's a public learning material
             ]
         });
@@ -98,7 +98,7 @@ export const generateQuiz = async (req, res, next) => {
             // userId: req.user._id,
             status: "ready",
             $or: [
-                { docType: "private" }, // User owns it
+                { userId: req.user._id }, // User owns it
                 { docType: "public" }      // It's a public learning material
             ]
         });
@@ -157,7 +157,7 @@ export const generateSummary = async (req, res, next) => {
             // userId: req.user._id,
             status: "ready",
             $or: [
-                { docType: "private" }, // User owns it
+                { userId: req.user._id }, // User owns it
                 { docType: "public" }      // It's a public learning material
             ]
         });
@@ -206,7 +206,7 @@ export const chat = async (req, res, next) => {
             // userId: req.user._id,
             status: "ready",
             $or: [
-                { docType: "private" }, // User owns it
+                { userId: req.user._id }, // User owns it
                 { docType: "public" }      // It's a public learning material
             ]
         });
@@ -292,7 +292,7 @@ export const explainConcept = async (req, res, next) => {
             // userId: req.user._id,
             status: "ready",
             $or: [
-                { docType: "private" }, // User owns it
+                { userId: req.user._id }, // User owns it
                 { docType: "public" }      // It's a public learning material
             ]
         });
