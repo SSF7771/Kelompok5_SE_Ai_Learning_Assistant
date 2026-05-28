@@ -38,7 +38,6 @@ export const uploadDocument = async (req, res, next) => {
 
         if(!title) {
             // Delete uploaded file if no title provided
-            await fs.unlink(req.file.path);
             return res.status(400).json({
                 success: false,
                 error: "Please provide a document title!",
@@ -69,9 +68,8 @@ export const uploadDocument = async (req, res, next) => {
             docType: "private"
         });
 
-        processPdf(document._id, req.file.path).catch(err => {
-            console.error("PDF processing error: ", err);
-        })
+        // This keeps the Vercel function alive until the PDF is parsed
+        await processPdf(document._id, fileUrl);
 
         res.status(201).json({
             success: true,

@@ -3,7 +3,6 @@ import Document from "../models/Document.js";
 import path from "path";
 import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { chunkText } from "../utils/textChunker.js";
-import fs from "fs/promises";
 import cloudinary from "../config/cloudinary.js";
 
 // createSemester -> Membuat entitas semester baru (misalnya Semester 1, 2, dst.) 
@@ -216,16 +215,7 @@ export const uploadPdfs = async (req, res, next) => {
       data: updatedSemester,
     });
   } catch (error) {
-    if (req.files && req.files.length > 0) {
-      // Loop through each file and delete it
-      req.files.forEach((file) => {
-        fs.unlink(file.path, (err) => {
-          if (err) console.error("Error deleting file: ", err);
-        });
-      });
-
       next(error);
-    }
   }
 };
 
@@ -408,8 +398,6 @@ export const uploadCoursePdf = async (req, res, next) => {
       message: "Document uploaded successfully. Processing in progress...",
     });
   } catch (error) {
-    if (req.file) await fs.unlink(req.file.path).catch(() => {});
-
     next(error);
   }
 };
