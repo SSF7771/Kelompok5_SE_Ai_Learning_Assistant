@@ -31,7 +31,7 @@ const FlashcardManager = ({ documentId }) => {
     setLoading(true);
 
     try {
-      const response = await flashcardService.getAllFlashcardSets(documentId);
+      const response = await flashcardService.getFlashcardForDocument(documentId);
 
       setFlashcardSets(response.data);
     } catch (error) {
@@ -291,12 +291,14 @@ const FlashcardManager = ({ documentId }) => {
               onClick={() => handleSelectedSet(set)}
             >
               {/* DELETE BUTTON */}
-              <button
-                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-rose-50 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
-                onClick={(e) => handleDeleteRequest(e, set)}
-              >
-                <Trash2 className="w-4 h-4" strokeWidth={2} />
-              </button>
+              {set.flashType === "private" && (
+                <button
+                  className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-rose-50 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                  onClick={(e) => handleDeleteRequest(e, set)}
+                >
+                  <Trash2 className="w-4 h-4" strokeWidth={2} />
+                </button>
+              )}
 
               {/* SET CONTENT */}
               <div className="space-y-4">
@@ -305,6 +307,11 @@ const FlashcardManager = ({ documentId }) => {
                 </div>
 
                 <div>
+                  {set.flashType === "public" && (
+                    <span className="inline-block px-2 py-0.5 mb-2 text-[10px] font-bold uppercase tracking-wider text-teal-600 bg-teal-50 border border-teal-100 rounded-md">
+                      Official Set
+                    </span>
+                  )}
                   <h4 className="text-base font-semibold text-slate-900 mb-1">
                     Flashcard Set
                   </h4>
@@ -335,7 +342,7 @@ const FlashcardManager = ({ documentId }) => {
         {selectedSet ? renderFlashcardReviewer() : renderSetList()}
       </div>
 
-      {/* FELETE CONFIRMATION MODAL */}
+      {/* DELETE CONFIRMATION MODAL */}
       <Modal
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
