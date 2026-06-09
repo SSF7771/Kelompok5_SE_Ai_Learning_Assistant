@@ -54,7 +54,7 @@ const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
               />
             </div>
             <h1 className="text-sm md:text-base font-bold text-slate-900 tracking-tight">
-              AI Learning Assistant
+              B-Nexus
             </h1>
           </div>
           <button
