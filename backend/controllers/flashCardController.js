@@ -24,7 +24,7 @@ export const getFlashCard = async (req, res, next) => {
       return res.status(404).json({ success: false, message: "Document not found" });
 
     // Query based on the Document's type
-    let query = { documentId: req.params.documentId };
+    let query = { documentId: documentId };
 
     if (doc.docType === "public") {
       // For public docs, only show the official public cards
@@ -57,7 +57,10 @@ export const getAllFlashCardSets = async (req, res, next) => {
   try {
     const flashcardSets = await FlashCard.find({
       userId: req.user._id,
-      flashType: "private"
+      $or = [
+        { flashType: "public" },
+        { flashType: "private" }
+      ]
     })
       .populate("documentId", "title")
       .sort({ createdAt: -1 });
