@@ -1,4 +1,5 @@
 import FlashCard from "../models/Flashcard.js";
+import Document from "../models/Document.js";
 
 // getAllFlashCardSets -> Mengambil seluruh daftar koleksi set flashcard yang dimiliki oleh user dari database 
 // untuk ditampilkan pada halaman utama koleksi atau dashboard.
