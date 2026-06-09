@@ -24,7 +24,7 @@ export const getFlashCard = async (req, res, next) => {
       return res.status(404).json({ success: false, message: "Document not found" });
 
     // Query based on the Document's type
-    let query = { documentId: documentId };
+    let query = { documentId: req.params.documentId };
 
     if (doc.docType === "public") {
       // For public docs, only show the official public cards
