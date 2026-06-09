@@ -28,9 +28,13 @@ export const getFlashCard = async (req, res, next) => {
 
     if (doc.docType === "public") {
       // For public docs, only show the official public cards
-      query.flashType = "public";
+      query.$or = [
+        { flashType: "public" },
+        { userId: req.user._id, flashType: "private" }
+      ];
     } else {
       // For private docs, only show the user's private cards
+      query.userId = req.user._id;
       query.flashType = "private";
     }
 
