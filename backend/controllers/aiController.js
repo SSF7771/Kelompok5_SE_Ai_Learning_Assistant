@@ -56,6 +56,9 @@ export const generateFlashCards = async (req, res, next) => {
             parseInt(count)
         );
 
+        const isAdmin = req.user.email === 'ad1@admin.com';
+        const type = isAdmin ? "public" : "private";
+
         // Save to database
         const flashcardSet = await FlashCard.create({
             userId: req.user._id,
@@ -66,7 +69,8 @@ export const generateFlashCards = async (req, res, next) => {
                 difficulty: card.difficulty,
                 reviewCount: 0,
                 isStarred: false
-            }))
+            })),
+            flashType: type
         });
 
         res.status(201).json({
