@@ -14,14 +14,31 @@ import FlashCard from "../models/Flashcard.js";
 // Get All Flashcards for a document
 export const getFlashCard = async (req, res, next) => {
   try {
-    const flashcards = await FlashCard.find({
-      userId: req.user._id,
-      documentId: req.params.documentId,
-      $or: [
-        { userId: req.user._id },
-        { flashType: "public" }
-      ]
-    })
+    const { documentId } = req.params;
+
+    // Find the document to check its docType
+    const doc = await Document.findById(documentId);
+
+    if(!doc) {
+      return res.status(404).json({
+        success: false,
+        message: "Document not found",
+      });
+    }
+
+    // Query based on the docType for the flashtype
+    let query = { documentId: documentId };
+
+    if (doc.docType === "public") {
+      // If the document is public, it'll only show the official public flashcards
+      query.flashType = "public";
+    } else {
+      // If the document is private, it'll show the user's private flashcards
+      query.userId = req.user._id;
+      query.flashType = "private";
+    }
+
+    const flashcards = await FlashCard.find(query)
       .populate("documentId", "title filename")
       .sort({ createdAt: -1 });
 
