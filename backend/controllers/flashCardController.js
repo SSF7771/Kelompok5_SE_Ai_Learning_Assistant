@@ -17,6 +17,10 @@ export const getFlashCard = async (req, res, next) => {
     const flashcards = await FlashCard.find({
       userId: req.user._id,
       documentId: req.params.documentId,
+      $or: [
+        { userId: req.user._id },
+        { flashType: "public" }
+      ]
     })
       .populate("documentId", "title filename")
       .sort({ createdAt: -1 });
@@ -36,6 +40,7 @@ export const getAllFlashCardSets = async (req, res, next) => {
   try {
     const flashcardSets = await FlashCard.find({
       userId: req.user._id,
+      flashType: "private"
     })
       .populate("documentId", "title")
       .sort({ createdAt: -1 });
