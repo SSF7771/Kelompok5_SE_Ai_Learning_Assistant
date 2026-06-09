@@ -40,6 +40,11 @@ const flashcardSchema = new mongoose.Schema({
             },
         },
     ],
+    flashType: {
+        type: String,
+        enum: ["private", "public"],
+        default: "private"
+    }
 }, {
     timestamps: true
 });
