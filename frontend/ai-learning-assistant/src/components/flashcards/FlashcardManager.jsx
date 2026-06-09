@@ -307,11 +307,6 @@ const FlashcardManager = ({ documentId }) => {
                 </div>
 
                 <div>
-                  {set.flashType === "public" && (
-                    <span className="inline-block px-2 py-0.5 mb-2 text-[10px] font-bold uppercase tracking-wider text-teal-600 bg-teal-50 border border-teal-100 rounded-md">
-                      Official Set
-                    </span>
-                  )}
                   <h4 className="text-base font-semibold text-slate-900 mb-1">
                     Flashcard Set
                   </h4>
