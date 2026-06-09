@@ -56,8 +56,7 @@ export const generateFlashCards = async (req, res, next) => {
             parseInt(count)
         );
 
-        const isAdmin = req.user.email === 'ad1@admin.com';
-        const type = isAdmin ? "public" : "private";
+        const type = document.docType;
 
         // Save to database
         const flashcardSet = await FlashCard.create({
