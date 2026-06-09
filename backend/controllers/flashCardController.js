@@ -15,8 +15,11 @@ import FlashCard from "../models/Flashcard.js";
 export const getFlashCard = async (req, res, next) => {
   try {
     const flashcards = await FlashCard.find({
-      userId: req.user._id,
-      documentId: req.params.documentId
+      documentId: req.params.documentId,
+      $or: [
+        { userId: req.user._id },
+        { flashType: "public" }
+      ]
     })
       .populate("documentId", "title filename")
       .sort({ createdAt: -1 });
