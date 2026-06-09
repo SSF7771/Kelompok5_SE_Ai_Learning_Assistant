@@ -21,7 +21,7 @@ export const getFlashCard = async (req, res, next) => {
         { flashType: "public" }
       ]
     })
-      .populate("documentId", "title filename")
+      .populate("documentId", "title fileName")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
