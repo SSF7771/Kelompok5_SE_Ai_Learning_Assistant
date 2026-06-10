@@ -18,12 +18,7 @@ export const getDashboard = async (req, res, next) => {
                 { docType: "public" }
             ]
          });
-        const totalFlashcardSets = await FlashCard.countDocuments({ 
-            $or: [
-                { userId: userId },
-                { flashType: "public" }
-            ]
-         });
+        const totalFlashcardSets = await FlashCard.countDocuments({ userId });
         const totalQuizzes = await Quiz.countDocuments({ userId });
         const completedQuizzes = await Quiz.countDocuments({ 
             userId,
@@ -33,12 +28,7 @@ export const getDashboard = async (req, res, next) => {
         });
 
         // Get flashcard statistics
-        const flashcardSets = await FlashCard.find({ 
-            $or: [
-                { userId: userId },
-                { flashType: "public" }
-            ]
-        });
+        const flashcardSets = await FlashCard.find({ userId });
 
         let totalFlashcards = 0;
         let reviewedFlashcards = 0;
