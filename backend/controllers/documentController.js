@@ -122,18 +122,8 @@ export const getDocuments = async (req, res, next) => {
             {
                 $lookup: {
                     from: 'flashcards',
-                    let: { docId: '$_id' }, // Pass the document ID into the lookup
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ['$documentId', '$$docId'] },
-                                $or: [
-                                    { userId: new mongoose.Types.ObjectId(req.user._id) },
-                                    { flashType: 'public' }
-                                ]
-                            }
-                        }
-                    ],
+                    localField: '_id',
+                    foreignField: 'documentId',
                     as: 'flashcardSets'
                 }
             },
@@ -187,10 +177,7 @@ export const getSingleDocument = async (req, res, next) => {
     try {
         const document = await Document.findOne({
             _id: req.params.id,
-            $or: [
-                { userId: req.user._id },
-                { docType: "public" }
-            ]
+            userId: req.user._id
         });
 
         if(!document) {
@@ -204,10 +191,7 @@ export const getSingleDocument = async (req, res, next) => {
         // Get counts of associated flashcards and quizzes
         const flashcardCount = await Flashcard.countDocuments({
             documentId: document._id,
-            $or: [
-                { userId: req.user._id },
-                { flashType: "public" }
-            ]
+            userId: req.user._id
         });
 
         const quizCount = await Quiz.countDocuments({
