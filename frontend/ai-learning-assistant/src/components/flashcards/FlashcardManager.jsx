@@ -291,14 +291,12 @@ const FlashcardManager = ({ documentId }) => {
               onClick={() => handleSelectedSet(set)}
             >
               {/* DELETE BUTTON */}
-              {set.flashType === "private" && (
-                <button
-                  className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-rose-50 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
-                  onClick={(e) => handleDeleteRequest(e, set)}
-                >
-                  <Trash2 className="w-4 h-4" strokeWidth={2} />
-                </button>
-              )}
+              <button
+                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-rose-50 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                onClick={(e) => handleDeleteRequest(e, set)}
+              >
+                <Trash2 className="w-4 h-4" strokeWidth={2} />
+              </button>
 
               {/* SET CONTENT */}
               <div className="space-y-4">
