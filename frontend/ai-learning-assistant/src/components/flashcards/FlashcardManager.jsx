@@ -337,7 +337,7 @@ const FlashcardManager = ({ documentId }) => {
                     <input 
                     type="number" 
                     className="w-full h-9 px-3 border border-neutral-200 rounded-lg bg-white text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#00d492] focus:border-transparent" 
-                    value={numQuestions}
+                    value={numCards}
                     onChange={(e) => setNumCards(Math.max(1, parseInt(e.target.value) || 1))}
                     min="1"
                     required
