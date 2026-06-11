@@ -28,7 +28,8 @@ const FlashcardManager = ({ documentId }) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [toDelete, setToDelete] = useState(null);
-  const [numCards, setNumCards] = useState(10);
+  // For the quantity of cards
+  const [count, setCount] = useState(10);
 
   const fetchFlashcardSets = async () => {
     setLoading(true);
@@ -54,7 +55,7 @@ const FlashcardManager = ({ documentId }) => {
     setGenerating(true);
 
     try {
-      await aiService.generateFlashcards(documentId, { numCards });
+      await aiService.generateFlashcards(documentId, { count });
 
       toast.success("Flashcards generated successfully!");
       setGenerateModalOpen(false);
@@ -320,48 +321,46 @@ const FlashcardManager = ({ documentId }) => {
         {selectedSet ? renderFlashcardReviewer() : renderSetList()}
       </div>
 
-        {renderSetList()}
-
-        {/* GENERATE FLASHCARDS */}
-        <Modal
-            isOpen={generateModalOpen}
-            onClose={() => setGenerateModalOpen(false)}
-            title="Generate New Flashcard"
-        >
-            <form onSubmit={handleGenerateFlashcards}
-            className='space-y-4'
-            >
-                <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5">
-                        Number of Cards
-                    </label>
-                    <input 
-                    type="number" 
-                    className="w-full h-9 px-3 border border-neutral-200 rounded-lg bg-white text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#00d492] focus:border-transparent" 
-                    value={numCards}
-                    onChange={(e) => setNumCards(Math.max(1, parseInt(e.target.value) || 1))}
-                    min="1"
-                    required
-                    />
-                </div>
-                <div className="flex justify-end gap-2 pt-2">
-                    <Button
-                        type='button'
-                        variant='secondary'
-                        onClick={() => setGenerateModalOpen(false)}
-                        disabled={generating}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type='submit'
-                        disabled={generating}
-                    >
-                        {generating ? "Generating..." : "Generate"}
-                    </Button>
-                </div>
-            </form>
-        </Modal>
+      {/* GENERATE FLASHCARDS */}
+      <Modal
+          isOpen={generateModalOpen}
+          onClose={() => setGenerateModalOpen(false)}
+          title="Generate New Flashcard"
+      >
+          <form onSubmit={handleGenerateFlashcards}
+          className='space-y-4'
+          >
+              <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                      Number of Cards
+                  </label>
+                  <input 
+                  type="number" 
+                  className="w-full h-9 px-3 border border-neutral-200 rounded-lg bg-white text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#00d492] focus:border-transparent" 
+                  value={count}
+                  onChange={(e) => setcount(Math.max(1, parseInt(e.target.value) || 1))}
+                  min="1"
+                  required
+                  />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                      type='button'
+                      variant='secondary'
+                      onClick={() => setGenerateModalOpen(false)}
+                      disabled={generating}
+                  >
+                      Cancel
+                  </Button>
+                  <Button
+                      type='submit'
+                      disabled={generating}
+                  >
+                      {generating ? "Generating..." : "Generate"}
+                  </Button>
+              </div>
+          </form>
+      </Modal>
 
       {/* DELETE CONFIRMATION MODAL */}
       <Modal
