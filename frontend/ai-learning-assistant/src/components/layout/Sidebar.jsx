@@ -46,11 +46,10 @@ const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
         {/* LOGO & CLOSE BUTTON FOR MOBILE */}
         <div className="flex items-center justify-between h-16 px-5 border-b border-slate-200/60">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-linear-to-br from-blue-400 to-teal-400 shadow-md shadow-blue-500/20">
-              <BrainCircuit
-                className="text-white"
-                size={20}
-                strokeWidth={2.5}
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl">
+              <img
+                src="/LogoB3.png"
+                className="w-10 h-auto"
               />
             </div>
             <h1 className="text-sm md:text-base font-bold text-slate-900 tracking-tight">
