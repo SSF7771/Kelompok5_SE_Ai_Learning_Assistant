@@ -50,7 +50,7 @@ export const generateFlashCards = async (text, count = 10) => {
     });
 
     const result = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-1.5-flash",
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
             generationConfig: {
                 temperature: 0.8, // 0.0 is robotic/same, 1.0 is very creative. 0.8 is best for variety.
@@ -60,8 +60,7 @@ export const generateFlashCards = async (text, count = 10) => {
         },
     });
 
-    const response = await result.response;
-    const generatedText = response.text();
+    const generatedText = result.text();
 
     // Parse the response
     const flashcards = [];
