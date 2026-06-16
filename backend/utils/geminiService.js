@@ -101,7 +101,18 @@ export const generateFlashCards = async (text, count = 10) => {
  */
 
 export const generateQuiz = async (text, numQuestions = 5) => {
+    // RANDOMIZE STARTING POINT
+    const limit = 15000;
+    let textSample = text;
+    if (text.length > limit) {
+        const maxStart = text.length - limit;
+        const randomStart = Math.floor(Math.random() * maxStart);
+        textSample = text.substring(randomStart, randomStart + limit);
+    }
+
     const prompt = `Generate exactly ${numQuestions} multiple choice questions from the following text.
+    IMPORTANT: Focus on different concepts than usual. Ensure a mix of terminology, 
+    conceptual understanding, and application. 
     Format each question as:
     Q: [Question]
     O1: [Option 1]
@@ -115,7 +126,7 @@ export const generateQuiz = async (text, numQuestions = 5) => {
     Seperate each question with "---"
 
     Text:
-    ${text.substring(0, 15000)}
+    ${textSample}
     `;
 
     try {
