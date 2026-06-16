@@ -22,7 +22,7 @@ if(!process.env.GEMINI_API_KEY) {
 
 export const generateFlashCards = async (text, count = 10) => {
     // RANDOMIZE STARTING POINT
-    const limit = 6000;
+    const limit = 15000;
     let textSample = text;
     if (text.length > limit) {
         const maxStart = text.length - limit;
@@ -32,7 +32,7 @@ export const generateFlashCards = async (text, count = 10) => {
 
     const prompt = `Generate exactly ${count} educational flashcards from the following text.
     IMPORTANT: Focus on different concepts than usual. Ensure a mix of terminology, 
-    conceptual understanding, and application.
+    conceptual understanding, and application. 
     Format each flashcard as:
     Q: [Clear, specific question]
     A: [Concise, accurate answer]
@@ -49,18 +49,12 @@ export const generateFlashCards = async (text, count = 10) => {
         apiKey: process.env.GEMINI_API_KEY
     });
 
-    const result = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            generationConfig: {
-                temperature: 0.8, // 0.0 is robotic/same, 1.0 is very creative. 0.8 is best for variety.
-                topP: 0.95, // ensures the AI considers a diverse set of words.
-                topK: 40,   // prevents the AI from picking completely nonsensical words while still allowing variety.
-                maxOutputTokens: 2048,
-        },
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt
     });
 
-    const generatedText = result.text();
+    const generatedText = response.text;
 
     // Parse the response
     const flashcards = [];
