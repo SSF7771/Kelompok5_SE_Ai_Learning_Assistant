@@ -22,7 +22,7 @@ if(!process.env.GEMINI_API_KEY) {
 
 export const generateFlashCards = async (text, count = 10) => {
     // RANDOMIZE STARTING POINT
-    const limit = 15000;
+    const limit = 6000;
     let textSample = text;
     if (text.length > limit) {
         const maxStart = text.length - limit;
