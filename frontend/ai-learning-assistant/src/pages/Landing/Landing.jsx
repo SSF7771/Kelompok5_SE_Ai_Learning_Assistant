@@ -70,7 +70,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto">
-            Upload your lecture notes, turn them into interactive learning tools, or access curated merged materials tailored specifically for <span className="font-semibold text-slate-800">X University</span> students.
+            Upload your lecture notes, turn them into interactive learning tools, or access curated merged materials tailored specifically for <span className="font-semibold text-slate-800">Binus University</span> students.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
