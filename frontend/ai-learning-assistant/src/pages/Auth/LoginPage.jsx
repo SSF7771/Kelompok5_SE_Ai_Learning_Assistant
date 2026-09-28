@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
-import authService from "../../services/authService";
+import authService from "../../services/authService.js";
 import { BrainCircuit, Mail, Lock, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -45,8 +45,10 @@ const LoginPage = () => {
         <div className="bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-xl shadow-slate-200/50 p-10">
           {/* HEADER */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-linear-to-br from-blue-400 to-teal-500 shadow-lg shadow-blue-500/25 mb-6">
-              <BrainCircuit className="w-7 h-7 text-white" strokeWidth={2} />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-linear-to-br from-blue-400 to-teal-500 border border-slate-500 shadow-lg shadow-blue-500/25 mb-6">
+              <a href="/">
+                <img src="/LogoB3.png" className="w-8 h-auto" />
+              </a>
             </div>
 
             <h1 className="text-2xl font-medium text-slate-900 tracking-tight mb-2">
@@ -90,7 +92,9 @@ const LoginPage = () => {
 
             {/* PASSWORD FIELD */}
             <div className="space-y-2">
-              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wide">Password</label>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wide">
+                Password
+              </label>
               <div className="relative group">
                 <div
                   className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-color duration-200 ${
@@ -117,14 +121,17 @@ const LoginPage = () => {
             {/* ERROR MESSAGE */}
             {error && (
               <div className="rounded-lg bg-red-50 border border-red-200 p-3">
-                <p className="text-xs text-red-600 font-medium text-center">{error}</p>
+                <p className="text-xs text-red-600 font-medium text-center">
+                  {error}
+                </p>
               </div>
             )}
 
             {/* SUBMIT BUTTON */}
-            <button onClick={handleSubmit} 
-            disabled={loading} 
-            className="group relative w-full h-12 bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 active:scale-[0.98] text-white text-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg shadow-blue-500/25 overflow-hidden"
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="group relative w-full h-12 bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 active:scale-[0.98] text-white text-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg shadow-blue-500/25 overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? (
@@ -135,7 +142,10 @@ const LoginPage = () => {
                 ) : (
                   <>
                     Sign In
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" strokeWidth={2.5} />
+                    <ArrowRight
+                      className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
+                      strokeWidth={2.5}
+                    />
                   </>
                 )}
               </span>
@@ -147,9 +157,9 @@ const LoginPage = () => {
           <div className="mt-8 pt-6 border-t border-slate-200/60">
             <p className="text-center text-sm text-slate-600">
               Don't have an account yet?{" "}
-              <Link 
-              to="/register" 
-              className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200"
+              <Link
+                to="/register"
+                className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200"
               >
                 Sign Up
               </Link>
