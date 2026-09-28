@@ -18,6 +18,7 @@ import SemesterDetailsPage from './pages/Semesters/SemesterDetailsPage';
 import CourseDetailsPage from './pages/Courses/CourseDetailsPage';
 import CourseChoicePage from './pages/Semesters/CourseChoicePage';
 import LearningPortalPage from './pages/Courses/LearningPortalPage';
+import Landing from "./pages/Landing/Landing";
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -34,9 +35,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path='/' element={<Landing />}/>
         <Route 
           path='/'
-          element={isAuthenticated ? <Navigate to="/dashboard" replace/> : <Navigate to="/login" replace/>}
+          element={isAuthenticated ? <Navigate to="/dashboard" replace/> : <Navigate to="/" replace/>}
         />
         <Route path='/login' element={<LoginPage />}/>
         <Route path='/register' element={<RegisterPage />}/>

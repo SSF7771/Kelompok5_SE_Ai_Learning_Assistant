@@ -48,8 +48,10 @@ const RegisterPage = () => {
         <div className="bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-xl shadow-slate-200/50 p-10">
           {/* HEADER */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-linear-to-br from-blue-400 to-teal-500 shadow-lg shadow-blue-500/25 mb-6">
-              <BrainCircuit className="w-7 h-7 text-white" strokeWidth={2} />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-linear-to-br from-blue-400 to-teal-500 border border-slate-500 shadow-lg shadow-blue-500/25 mb-6">
+              <a href="/">
+                <img src="/LogoB3.png" className="w-8 h-auto" />
+              </a>
             </div>
 
             <h1 className="text-2xl font-medium text-slate-900 tracking-tight mb-2">
