@@ -15,7 +15,7 @@ const FlashCardsListPage = () => {
         try {
           const response = await flashcardService.getAllFlashcardSets();
 
-          console.log("fetchflashcardSets___", response.data);
+          // console.log("fetchflashcardSets___", response.data);
 
           setFlashcardSets(response.data);
 

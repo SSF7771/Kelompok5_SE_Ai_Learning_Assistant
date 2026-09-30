@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   Sparkles,
   Brain,
+  Coins,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import moment from "moment";
@@ -17,6 +18,7 @@ import Spinner from "../common/Spinner.jsx";
 import Modal from "../common/Modal.jsx";
 import Flashcard from "./Flashcard.jsx";
 import Button from "../common/Button.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const FlashcardManager = ({ documentId }) => {
   const [flashcardSets, setFlashcardSets] = useState([]);
@@ -30,12 +32,14 @@ const FlashcardManager = ({ documentId }) => {
   const [toDelete, setToDelete] = useState(null);
   // For the quantity of cards
   const [count, setCount] = useState(10);
+  const { user, refreshProfile } = useAuth();
 
   const fetchFlashcardSets = async () => {
     setLoading(true);
 
     try {
-      const response = await flashcardService.getFlashcardForDocument(documentId);
+      const response =
+        await flashcardService.getFlashcardForDocument(documentId);
 
       setFlashcardSets(response.data);
     } catch (error) {
@@ -52,12 +56,21 @@ const FlashcardManager = ({ documentId }) => {
 
   const handleGenerateFlashcards = async (e) => {
     e.preventDefault();
+    const TOKEN_COST = 3;
+
+    if ((user?.tokens || 0) < TOKEN_COST) {
+      toast.error("Not enough tokens! Please top up to continue.");
+      return;
+    }
+
     setGenerating(true);
 
     try {
       await aiService.generateFlashcards(documentId, { count });
 
-      toast.success("Flashcards generated successfully!");
+      await refreshProfile();
+
+      toast.success("Flashcards generated successfully! (-3 tokens)");
       setGenerateModalOpen(false);
       fetchFlashcardSets();
     } catch (error) {
@@ -90,27 +103,28 @@ const FlashcardManager = ({ documentId }) => {
   };
 
   const handleToggleStar = async (cardId) => {
-      try {
-        await flashcardService.toggleStar(cardId);
-        const updateSets = flashcardSets.map((set) => {
-          if(set._id === selectedSet._id) {
-            const updatedCards = set.cards.map((card) => 
-              card._id === cardId ? { ...card, isStarred: !card.isStarred } : card
-            );
+    try {
+      await flashcardService.toggleStar(cardId);
+      const updateSets = flashcardSets.map((set) => {
+        if (set._id === selectedSet._id) {
+          const updatedCards = set.cards.map((card) =>
+            card._id === cardId
+              ? { ...card, isStarred: !card.isStarred }
+              : card,
+          );
 
-            return { ...set, cards: updatedCards };
-          }
+          return { ...set, cards: updatedCards };
+        }
 
-          return set;
-        });
+        return set;
+      });
 
-        setFlashcardSets(updateSets);
-        setselectedSet(updateSets.find((set) => set._id === selectedSet._id));
-        toast.success("Flashcard starred status updated!");
-
-      } catch (error) {
-        toast.error("Failed to update starred status.");
-      }
+      setFlashcardSets(updateSets);
+      setselectedSet(updateSets.find((set) => set._id === selectedSet._id));
+      toast.success("Flashcard starred status updated!");
+    } catch (error) {
+      toast.error("Failed to update starred status.");
+    }
   };
 
   const handlePrevCard = () => {
@@ -186,7 +200,10 @@ const FlashcardManager = ({ documentId }) => {
               onClick={handlePrevCard}
               disabled={selectedSet.cards.length <= 1}
             >
-              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" strokeWidth={2.5} />
+              <ChevronLeft
+                className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200"
+                strokeWidth={2.5}
+              />
               Previous
             </button>
 
@@ -204,7 +221,10 @@ const FlashcardManager = ({ documentId }) => {
               disabled={selectedSet.cards.length <= 1}
             >
               Next
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" strokeWidth={2.5} />
+              <ChevronRight
+                className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
+                strokeWidth={2.5}
+              />
             </button>
           </div>
         </div>
@@ -238,8 +258,16 @@ const FlashcardManager = ({ documentId }) => {
             className="group inline-flex items-center gap-2 px-6 h-12 bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
             onClick={() => setGenerateModalOpen(true)}
           >
-              <Sparkles className="w-4 h-4" strokeWidth={2} />
-              Generate Flashcards
+            <Sparkles className="w-4 h-4" strokeWidth={2} />
+            <div className="flex flex-col text-left">
+              <span className="font-semibold text-sm leading-tight">
+                Generate Flashcards
+              </span>
+
+              <span className="flex items-center gap-1 text-sm font-medium text-blue-100/90 mt-0.5">
+                <Coins size={13} strokeWidth={2.5} color="orange" />3 tokens
+              </span>
+            </div>
           </button>
         </div>
       );
@@ -260,11 +288,20 @@ const FlashcardManager = ({ documentId }) => {
           </div>
 
           <button
-            className="group inline-flex items-center gap-2 px-5 h-11 bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+            className="group inline-flex items-center gap-2.5 px-5 h-auto py-2.5 bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
             onClick={() => setGenerateModalOpen(true)}
           >
-              <Plus className="w-4 h-4" strokeWidth={2.5} />
-              Generate New Set
+            <Plus className="w-5 h-5 shrink-0" strokeWidth={2.5} />
+
+            <div className="flex flex-col text-left">
+              <span className="font-semibold text-sm leading-tight">
+                Generate New Set
+              </span>
+
+              <span className="flex items-center gap-1 text-sm font-medium text-blue-100/90 mt-0.5">
+                <Coins size={13} strokeWidth={2.5} color="orange" />3 tokens
+              </span>
+            </div>
           </button>
         </div>
 
@@ -323,43 +360,49 @@ const FlashcardManager = ({ documentId }) => {
 
       {/* GENERATE FLASHCARDS */}
       <Modal
-          isOpen={generateModalOpen}
-          onClose={() => setGenerateModalOpen(false)}
-          title="Generate New Flashcard"
+        isOpen={generateModalOpen}
+        onClose={() => setGenerateModalOpen(false)}
+        title="Generate New Flashcard"
       >
-          <form onSubmit={handleGenerateFlashcards}
-          className='space-y-4'
-          >
-              <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
-                      Number of Cards
-                  </label>
-                  <input 
-                  type="number" 
-                  className="w-full h-9 px-3 border border-neutral-200 rounded-lg bg-white text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#00d492] focus:border-transparent" 
-                  value={count}
-                  onChange={(e) => setCount(Math.max(1, parseInt(e.target.value) || 1))}
-                  min="1"
-                  required
-                  />
-              </div>
-              <div className="flex justify-end gap-2 pt-2">
-                  <Button
-                      type='button'
-                      variant='secondary'
-                      onClick={() => setGenerateModalOpen(false)}
-                      disabled={generating}
-                  >
-                      Cancel
-                  </Button>
-                  <Button
-                      type='submit'
-                      disabled={generating}
-                  >
-                      {generating ? "Generating..." : "Generate"}
-                  </Button>
-              </div>
-          </form>
+        <form onSubmit={handleGenerateFlashcards} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+              Number of Cards
+            </label>
+            <input
+              type="number"
+              className="w-full h-9 px-3 border border-neutral-200 rounded-lg bg-white text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#00d492] focus:border-transparent"
+              value={count}
+              onChange={(e) =>
+                setCount(Math.max(1, parseInt(e.target.value) || 1))
+              }
+              min="1"
+              required
+            />
+          </div>
+
+          <div className="text-xs text-neutral-500 flex items-center gap-1">
+            <span>This action will cost</span>
+            <span className="font-semibold text-neutral-800 flex items-center gap-0.5">
+              <Coins size={12} color="orange" /> 3 tokens
+            </span>
+            <span>(You have {user?.tokens || 0})</span>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setGenerateModalOpen(false)}
+              disabled={generating}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={generating}>
+              {generating ? "Generating..." : "Generate"}
+            </Button>
+          </div>
+        </form>
       </Modal>
 
       {/* DELETE CONFIRMATION MODAL */}
