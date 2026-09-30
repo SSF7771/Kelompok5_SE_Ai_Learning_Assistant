@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { createStripeCheckoutSession, claimTokens } from "../../services/stripeService.js";
 import { useSearchParams } from "react-router-dom";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 
 const Header = ({ toggleSidebar }) => {
   const { user, refreshProfile } = useAuth();
@@ -71,7 +71,7 @@ const Header = ({ toggleSidebar }) => {
     {
       id: "pro",
       name: "Pro Booster",
-      tokens: 150,
+      tokens: 135,
       priceInUSD: 500,
       displayPrice: "$5.00",
       popular: true,
@@ -80,7 +80,7 @@ const Header = ({ toggleSidebar }) => {
     {
       id: "ultimate",
       name: "Ultimate Mega Pack",
-      tokens: 500,
+      tokens: 225,
       priceInUSD: 1500,
       displayPrice: "$15.00",
       popular: false,
@@ -146,7 +146,6 @@ const Header = ({ toggleSidebar }) => {
                     {user?.email || "user@gamil.com"}
                   </p>
 
-                  {/* TOKEN DISPLAY WITH '+' BUTTON */}
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <Coins size={15} strokeWidth={3} color="orange" />
                     <p className="text-xs font-medium text-slate-600">

@@ -1,4 +1,5 @@
 import Document from "../models/Document.js";
+import User from "../models/User.js";
 import FlashCard from "../models/Flashcard.js";
 import Quiz from "../models/Quiz.js";
 import * as geminiService from "../utils/geminiService.js";
@@ -23,12 +24,22 @@ import ChatHistory from "../models/ChatHistory.js";
 export const generateFlashCards = async (req, res, next) => {
     try {
         const { documentId, count = 10 } = req.body;
+        const TOKEN_COST = 3;
 
         if(!documentId) {
             return res.status(400).json({
                 success: false,
                 error: "Please provide documentId!",
                 statusCode: 400
+            });
+        }
+
+        const user = await User.findById(req.user._id);
+        if (!user || user.tokens < TOKEN_COST) {
+            return res.status(403).json({
+                success: false,
+                error: `Insufficient tokens! You need at least ${TOKEN_COST} tokens to generate flashcards.`,
+                statusCode: 403
             });
         }
 
@@ -72,6 +83,12 @@ export const generateFlashCards = async (req, res, next) => {
             flashType: type
         });
 
+        // Deduct tokens from user
+        await User.findByIdAndUpdate(req.user._id, {
+            $inc: { tokens: -TOKEN_COST }
+        });
+
+
         res.status(201).json({
             success: true,
             data: flashcardSet,
@@ -87,12 +104,22 @@ export const generateFlashCards = async (req, res, next) => {
 export const generateQuiz = async (req, res, next) => {
     try {
         const { documentId, numQuestions = 5, title } = req.body;
+        const TOKEN_COST = 5;
         
         if(!documentId) {
             return res.status(400).json({
                 success: false,
                 error: "Please provide a documentId.",
                 statusCode: 400
+            });
+        }
+
+        const user = await User.findById(req.user._id);
+        if (!user || user.tokens < TOKEN_COST) {
+            return res.status(403).json({
+                success: false,
+                error: `Insufficient tokens! You need at least ${TOKEN_COST} tokens to generate flashcards.`,
+                statusCode: 403
             });
         }
 
@@ -175,6 +202,11 @@ export const generateSummary = async (req, res, next) => {
 
         // Generate summary using AI (GEMINI)
         const summary = await geminiService.generateSummary(document.extractedText);
+
+        // Deduct tokens from user
+        await User.findByIdAndUpdate(req.user._id, {
+            $inc: { tokens: -TOKEN_COST }
+        });
 
         res.status(201).json({
             success: true,
