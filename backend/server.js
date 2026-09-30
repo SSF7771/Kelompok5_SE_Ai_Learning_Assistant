@@ -16,6 +16,8 @@ import quizRoutes from "./routes/quizRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import semesterRoutes from "./routes/semesterRoutes.js";
+import stripeRoutes from "./routes/stripeRoutes.js";
+import { stripeWebhook } from './controllers/stripeController.js';
 
 //ES6 module __dirname alternative
 const __filename = fileURLToPath(import.meta.url);
@@ -48,6 +50,12 @@ app.use(
     })
 );
 
+app.post(
+    '/api/stripe/webhook',
+    express.raw({ type: 'application/json' }),
+    stripeWebhook
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -62,6 +70,7 @@ app.use("/api/quizzes", quizRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/semesters", semesterRoutes);
+app.use("/api/stripe", stripeRoutes);
 
 
 app.use(errorHandler);

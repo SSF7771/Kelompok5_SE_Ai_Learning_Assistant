@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import axiosInstance from "../utils/axiosInstance";
 
 const AuthContext = createContext();
 
@@ -28,6 +29,8 @@ export const AuthProvider = ({ children }) => {
           const userData = JSON.parse(userStr);
           setUser(userData);
           setIsAuthenticated(true);
+
+          refreshProfile(); 
         }
 
       } catch (error) {
@@ -38,12 +41,28 @@ export const AuthProvider = ({ children }) => {
       }
   };
 
+  const refreshProfile = async () => {
+    try {
+      const response = await axiosInstance.get("/api/auth/profile");
+      const freshUserData = response.data.data; // { success: true, data: { ... } }
+
+      if (freshUserData) {
+        setUser(freshUserData);
+        localStorage.setItem("user", JSON.stringify(freshUserData));
+      }
+    } catch (error) {
+      console.error("Failed to refresh profile data:", error);
+    }
+  };
+
   const login = (userData, token) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
 
     setUser(userData);
     setIsAuthenticated(true);
+
+    refreshProfile();
   };
 
   const logout = () => {
@@ -68,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateUser,
+    refreshProfile,
     checkAuthStatus
   };
 
