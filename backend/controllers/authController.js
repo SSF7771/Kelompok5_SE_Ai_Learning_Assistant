@@ -156,6 +156,7 @@ export const getProfile = async (req, res, next) => {
             username: user.username,
             email: user.email,
             profileImage: user.profileImage,
+            tokens: user.tokens,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         },

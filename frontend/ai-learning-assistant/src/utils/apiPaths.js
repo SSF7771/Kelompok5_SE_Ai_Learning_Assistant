@@ -61,4 +61,9 @@ export const API_PATHS = {
         FETCH_FOR_LEARNING: (semesterId, courseId) => 
             `/api/semesters/${semesterId}/courses/${courseId}/getForLearning`,
     },
+
+    STRIPE: {
+        CREATE_CHECKOUT: "/api/stripe/create-checkout-session",
+        CLAIM_TOKENS: "/api/stripe/claim-tokens",
+    }
 };
