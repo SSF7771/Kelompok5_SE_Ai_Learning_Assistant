@@ -287,12 +287,8 @@ const FlashcardManager = ({ documentId }) => {
             </p>
           </div>
 
-          <button
-            className="group inline-flex items-center gap-2.5 px-5 h-auto py-2.5 bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
-            onClick={() => setGenerateModalOpen(true)}
-          >
-            <Plus className="w-5 h-5 shrink-0" strokeWidth={2.5} />
-
+          <Button onClick={() => setGenerateModalOpen(true)}>
+            <Plus size={16} />
             <div className="flex flex-col text-left">
               <span className="font-semibold text-sm leading-tight">
                 Generate New Set
@@ -302,7 +298,7 @@ const FlashcardManager = ({ documentId }) => {
                 <Coins size={13} strokeWidth={2.5} color="orange" />3 tokens
               </span>
             </div>
-          </button>
+          </Button>
         </div>
 
         {/* FLASHCARD SETS GRID */}

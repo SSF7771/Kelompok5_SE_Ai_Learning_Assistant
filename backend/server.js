@@ -72,7 +72,6 @@ app.use("/api/ai", aiRoutes);
 app.use("/api/semesters", semesterRoutes);
 app.use("/api/stripe", stripeRoutes);
 
-
 app.use(errorHandler);
 
 app.get("/", (req, res) => {
