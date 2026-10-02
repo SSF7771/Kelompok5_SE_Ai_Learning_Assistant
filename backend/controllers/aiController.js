@@ -88,7 +88,6 @@ export const generateFlashCards = async (req, res, next) => {
             $inc: { tokens: -TOKEN_COST }
         });
 
-
         res.status(201).json({
             success: true,
             data: flashcardSet,
@@ -156,6 +155,10 @@ export const generateQuiz = async (req, res, next) => {
             totalQuestions: questions.length,
             userAnswers: [],
             score: 0
+        });
+
+        await User.findByIdAndUpdate(req.user._id, {
+            $inc: { tokens: -TOKEN_COST }
         });
 
         res.status(201).json({
