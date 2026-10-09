@@ -11,6 +11,8 @@ import {
   UploadCloud,
   X,
   ArrowRight,
+  Database,
+  GraduationCap,
 } from "lucide-react";
 import semesterService from "../../services/BankQuestionService";
 import Spinner from "../../components/common/Spinner";
@@ -318,23 +320,24 @@ const SemesterDetailsPage = () => {
                   <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">
                     {course.courseCode}
                   </span>
-                  <h3 className="text-md font-bold text-blue-500">
+                  {/* Choices for Bank Questions and Learning Portal */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
                     <Link
-                      to={`/semesters/${semester.semesterNumber}/${course._id}/choice`}
+                      to={`/semesters/${semester.semesterNumber}/${course._id}/questionsBank`}
+                      className="flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl text-xs font-semibold transition-colors group"
                     >
-                      <Button
-                        type='button'
-                        variant='primary'
-                        size="sm"
-                        classname="group transition-all duration-300"
-                      >
-                        <h3 className="text-xs text-white">
-                          Learn More
-                        </h3>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Button>
+                      <Database className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                      <span>Question Bank</span>
                     </Link>
-                  </h3>
+
+                    <Link
+                      to={`/semesters/${semester.semesterNumber}/${course._id}/learning`}
+                      className="flex items-center justify-center gap-1.5 py-2 px-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl text-xs font-semibold transition-colors group"
+                    >
+                      <GraduationCap className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                      <span>Learning Portal</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
